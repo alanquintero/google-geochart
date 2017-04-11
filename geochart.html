@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	    <script type="text/javascript">
+	        google.charts.load('visualization', {'packages':['geochart']});
+            google.charts.setOnLoadCallback(drawRegionsMap);
+	  
+            function drawRegionsMap() {
+	            redrawRegionsMap("region");
+            }
+	  
+	        function redrawRegionsMap(option) {
+	            var chart = new google.visualization.GeoChart(document.getElementById('map_div'));
+		        if(option == "region") {
+			        var dataArray = [['City']];
+			        var data = google.visualization.arrayToDataTable(dataArray);
+			        var options = {
+		                displayMode: 'regions',
+		                region : 'US',
+		                legend: "none",
+                        width: 600,
+                        height: 500,
+                        resolution: 'metros'
+		            };
+			
+			        google.visualization.events.addListener(chart, "regionClick", function (eventData) {
+                        var countryISO2 = eventData["region"];
+				        var position = arrayContainsCode(dataArray, countryISO2);
+				        if ( position == -1) {
+					        dataArray.push([countryISO2]);
+				        } else {
+			                dataArray.splice(position, 1);	
+				        }
+			            data = google.visualization.arrayToDataTable(dataArray);
+			            chart.draw(data, options);
+				        wait(300);
+                    });
+		        }else{
+			        var dataArray = [['State']];
+	         	    var data = google.visualization.arrayToDataTable(dataArray);
+		            var options = {
+		                resolution: 'provinces',
+			            region : 'US'
+		            };
+			
+			        google.visualization.events.addListener(chart, "regionClick", function (eventData) {
+                        var countryISO2 = eventData["region"]; 
+			            var position = arrayContainsCode(dataArray, countryISO2);
+				        if ( position == -1) {
+					        dataArray.push([countryISO2]);
+				        } else {
+			                dataArray.splice(position, 1);
+				        }
+			            data = google.visualization.arrayToDataTable(dataArray);
+			            chart.draw(data, options);
+				        wait(500);
+                    });
+		        }
+                chart.draw(data, options);
+	        }
+	  
+	        function arrayContainsCode(dataArray, code) {
+			    var i = dataArray.length;
+			    while (i--) {
+                    if (dataArray[i] == code) {
+                        return i;
+                    }
+                }
+                return -1;
+	        }
+		
+	        function wait(ms){
+                var start = new Date().getTime();
+                var end = start;
+                while(end < start + ms) {
+                    end = new Date().getTime();
+                }
+            }
+	
+        </script>
+    </head>
+  
+    <body ng-app>
+	    <div>
+		    <h1>Simple Google GeoChart Example</h1>
+		</div>
+	    <div ng-init="mapOption='region'">
+	        <label for="region">Region</label>
+            <input id="region" type="radio" ng-model="mapOption" value="region" 
+			    onclick="redrawRegionsMap('region');" /><br>
+		    <label for="state">State</label>
+	        <input id="state" type="radio" ng-model="mapOption" value="state" 
+			    onclick="redrawRegionsMap('state');" /><br>
+		    <tt>Selected = {{mapOption}}</tt><br/>
+	    </div>
+        <div id="map_div" style="width: 900px; height: 500px;"></div>
+    </body>
+</html>
