@@ -21,5 +21,5 @@ Reference: https://developers.google.com/chart/interactive/docs/gallery/geochart
 
 • You can click to highlight/unhighlighted Regions/States 
 
-Working Example: http://sample-env.8pb6v3iedj.us-west-2.elasticbeanstalk.com/
+Working Example: http://google-geochart.us-west-2.elasticbeanstalk.com/
 
