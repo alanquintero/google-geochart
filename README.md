@@ -1,4 +1,4 @@
-# Simple Google GeoChart Example
+# Google GeoChart
 
 ## What is a GeoChart?
 
@@ -19,7 +19,11 @@ Reference: https://developers.google.com/chart/interactive/docs/gallery/geochart
 
 • You can select between Region and State
 
-• You can click to highlight/unhighlighted Regions/States 
+• You can click to highlight/unhighlighted Regions/States
+
+• You can change the colors of the Map (background, region/state, on-click)
+
+• You can Print the Map
 
 Working Example: http://google-geochart.us-west-2.elasticbeanstalk.com/
 
