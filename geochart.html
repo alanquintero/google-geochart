@@ -1,100 +1,213 @@
 <!DOCTYPE html>
 <html>
-    <head>
-	    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-	    <script type="text/javascript">
-	        google.charts.load('visualization', {'packages':['geochart']});
-            google.charts.setOnLoadCallback(drawRegionsMap);
-	  
-            function drawRegionsMap() {
-	            redrawRegionsMap("region");
-            }
-	  
-	        function redrawRegionsMap(option) {
-	            var chart = new google.visualization.GeoChart(document.getElementById('map_div'));
-		        if(option == "region") {
-			        var dataArray = [['City']];
-			        var data = google.visualization.arrayToDataTable(dataArray);
-			        var options = {
-		                displayMode: 'regions',
-		                region : 'US',
-		                legend: "none",
-                        width: 600,
-                        height: 500,
-                        resolution: 'metros'
-		            };
-			
-			        google.visualization.events.addListener(chart, "regionClick", function (eventData) {
-                        var countryISO2 = eventData["region"];
-				        var position = arrayContainsCode(dataArray, countryISO2);
-				        if ( position == -1) {
-					        dataArray.push([countryISO2]);
-				        } else {
-			                dataArray.splice(position, 1);	
-				        }
-			            data = google.visualization.arrayToDataTable(dataArray);
-			            chart.draw(data, options);
-				        wait(300);
-                    });
-		        }else{
-			        var dataArray = [['State']];
-	         	    var data = google.visualization.arrayToDataTable(dataArray);
-		            var options = {
-		                resolution: 'provinces',
-			            region : 'US'
-		            };
-			
-			        google.visualization.events.addListener(chart, "regionClick", function (eventData) {
-                        var countryISO2 = eventData["region"]; 
-			            var position = arrayContainsCode(dataArray, countryISO2);
-				        if ( position == -1) {
-					        dataArray.push([countryISO2]);
-				        } else {
-			                dataArray.splice(position, 1);
-				        }
-			            data = google.visualization.arrayToDataTable(dataArray);
-			            chart.draw(data, options);
-				        wait(500);
-                    });
-		        }
-                chart.draw(data, options);
-	        }
-	  
-	        function arrayContainsCode(dataArray, code) {
-			    var i = dataArray.length;
-			    while (i--) {
-                    if (dataArray[i] == code) {
-                        return i;
-                    }
-                }
-                return -1;
-	        }
-		
-	        function wait(ms){
-                var start = new Date().getTime();
-                var end = start;
-                while(end < start + ms) {
-                    end = new Date().getTime();
-                }
-            }
+<head>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<style>
+div {
+	margin-left: 10px;
+}
+#mapButton {
+    display: inline-block;
+}
+</style>
+
+<script type="text/javascript">
+	var globalDataArray;
+
+	google.charts.load('visualization', {
+		'packages' : [ 'geochart' ]
+	});
+	google.charts.setOnLoadCallback(drawRegionsMap);
+
+	function drawRegionsMap() {
+		redrawRegionsMap("region", false);
+	}
+
+	function redrawRegionsMap(option, isUpdate) {
+		var chart = new google.visualization.GeoChart(document
+				.getElementById('map_div'));
+		if (option == '') {
+			option = document
+					.querySelector('input[name="mapSelection"]:checked').value;
+		}
+		if (option == "region") {
+			if (isUpdate == false) {
+				var dataArray = [ [ 'City' ] ];
+			} else {
+				var dataArray = globalDataArray;
+			}
+			var data = google.visualization.arrayToDataTable(dataArray);
+			var options = {
+				displayMode : 'regions',
+				region : 'US',
+				legend : "none",
+				width : 600,
+				height : 500,
+				resolution : 'metros',
+				backgroundColor : document.getElementById("background").value,
+				datalessRegionColor : document.getElementById("state-region").value,
+				defaultColor : document.getElementById("on-click").value
+			};
+
+			google.visualization.events
+					.addListener(chart, "regionClick",
+							function(eventData) {
+								var countryISO2 = eventData["region"];
+								var position = arrayContainsCode(dataArray,
+										countryISO2);
+								if (position == -1) {
+									dataArray.push([ countryISO2 ]);
+								} else {
+									dataArray.splice(position, 1);
+								}
+								data = google.visualization
+										.arrayToDataTable(dataArray);
+								chart.draw(data, options);
+								wait(300);
+							});
+		} else {
+			if (isUpdate == false) {
+				var dataArray = [ [ 'State' ] ];
+			} else {
+				var dataArray = globalDataArray;
+			}
+			var data = google.visualization.arrayToDataTable(dataArray);
+			var options = {
+				resolution : 'provinces',
+				region : 'US',
+				backgroundColor : document.getElementById("background").value,
+				datalessRegionColor : document.getElementById("state-region").value,
+				defaultColor : document.getElementById("on-click").value
+			};
+
+			google.visualization.events
+					.addListener(chart, "regionClick",
+							function(eventData) {
+								var countryISO2 = eventData["region"];
+								var position = arrayContainsCode(dataArray,
+										countryISO2);
+								if (position == -1) {
+									dataArray.push([ countryISO2 ]);
+								} else {
+									dataArray.splice(position, 1);
+								}
+								data = google.visualization
+										.arrayToDataTable(dataArray);
+								chart.draw(data, options);
+								wait(500);
+							});
+		}
+		globalDataArray = dataArray;
+		chart.draw(data, options);
+	}
+
+	function arrayContainsCode(dataArray, code) {
+		var i = dataArray.length;
+		while (i--) {
+			if (dataArray[i] == code) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	function wait(ms) {
+		var start = new Date().getTime();
+		var end = start;
+		while (end < start + ms) {
+			end = new Date().getTime();
+		}
+	}
+
+	function printMap() {
+        var mapWindow = window.open('', 'PRINT', 'height=400,width=600');
+        mapWindow.document.write(document.getElementById('map_div').innerHTML);
+        mapWindow.document.close();
+        mapWindow.focus();
+        mapWindow.print();
+        mapWindow.close();
+	}
 	
-        </script>
-    </head>
-  
-    <body ng-app>
-	    <div>
-		    <h1>Simple Google GeoChart Example</h1>
+	function resetColors() {
+		document.getElementById("background").value = "#81d4fa";
+		document.getElementById("state-region").value = "#FFFFFF";
+		document.getElementById("on-click").value = "#228B22";
+        redrawRegionsMap('', true);
+	}
+	
+	function resetMap() {
+        redrawRegionsMap('', false);
+	}
+
+</script>
+</head>
+
+<body ng-app>
+
+	<div align="center">
+		<h1>Google GeoChart</h1>
+	</div>
+
+	<div>
+		<div ng-init=" mapOption='region'">
+			<fieldset>
+				<legend>Map Selection</legend>
+				<label for="region" class="radio-inline"><b>Region</b></label> <input
+					id="region" type="radio" ng-model="mapOption" name="mapSelection"
+					value="region" onclick="redrawRegionsMap('region', false);" /> <label
+					for="state" class="radio-inline"><b>State</b></label> <input
+					id="state" type="radio" ng-model="mapOption" name="mapSelection"
+					value="state" onclick="redrawRegionsMap('state', false);" /><br>
+			</fieldset>
 		</div>
-	    <div ng-init="mapOption='region'">
-	        <label for="region">Region</label>
-            <input id="region" type="radio" ng-model="mapOption" value="region" 
-			    onclick="redrawRegionsMap('region');" /><br>
-		    <label for="state">State</label>
-	        <input id="state" type="radio" ng-model="mapOption" value="state" 
-			    onclick="redrawRegionsMap('state');" /><br>
-		    <tt>Selected = {{mapOption}}</tt><br/>
-	    </div>
-        <div id="map_div" style="width: 900px; height: 500px;"></div>
-    </body>
+		<br>
+		<div>
+			<fieldset>
+				<legend>Color Selection</legend>
+
+				<label for="background">Background</label> <input type="color"
+					id="background" value="#81d4fa"> <label for="state-region">Region/State</label>
+				<input type="color" id="state-region" value="#FFFFFF"> <label
+					for="on-click">On-Click</label> <input type="color" id="on-click"
+					value="#228B22"> <br>
+				<button onclick="redrawRegionsMap('', true);"
+					class="btn btn-success" type="button">Apply Colors</button>
+
+			</fieldset>
+		</div>
+	</div>
+
+	<br>
+	<div>
+		<fieldset>
+			<legend>Map</legend>
+			<button type="button" class="btn btn-primary" id="mapButton"
+				onclick="printMap();">Print Map</button>
+			<button type="button" class="btn btn-warning" id="mapButton"
+				onclick="resetColors();">Reset Colors</button>
+			<button type="button" class="btn btn-danger" id="mapButton"
+			    onclick="resetMap();">Reset Map</button>
+			<div align="center" id="map_div" style="width: 900px; height: 500px;"></div>
+			<iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
+		</fieldset>
+	</div>
+	
+	<br>
+	<br>
+	<br>
+	<footer align="center">
+		Google GeoChart &copy; <br> Created By <br> Alan Quintero <br>
+		<a href="https://mx.linkedin.com/in/alan-quintero-a7770a87">
+			LinkedIn </a>
+	</footer>
+
+</body>
 </html>
