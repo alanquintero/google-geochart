@@ -25,5 +25,7 @@ Reference: https://developers.google.com/chart/interactive/docs/gallery/geochart
 
 • You can Print the Map
 
-Working Example: http://google-geochart.us-west-2.elasticbeanstalk.com/
+• You can Reset Map colors and Map selections
+
+Working Example: http://geochart.us-west-1.elasticbeanstalk.com/
 
