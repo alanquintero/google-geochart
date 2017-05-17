@@ -15,7 +15,7 @@ A geochart is rendered within the browser using SVG or VML. Note that the geocha
 Reference: https://developers.google.com/chart/interactive/docs/gallery/geochart
 
 
-## Funtionality
+## Functionality
 
 • You can select between Region and State
 
