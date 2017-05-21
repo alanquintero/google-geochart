@@ -1,5 +1,4 @@
 version: 1
 cron: 
-  - name: "task1"
-    url: "/scheduled"
-    schedule: "* * * * *"
+  - name: "Google GeoChart"
+    url: "/"
