@@ -2,9 +2,9 @@
   "name": "google-geochart",
   "version": "1.0.0",
   "description": "A Google GeoChart Sample",
-  "main": "geochart.html",
+  "main": "index.js",
   "scripts": {
-    "start": "node geochart.html"
+    "start": "node index.js"
   },
   "dependencies": {
     "express": "^4.13.3"
