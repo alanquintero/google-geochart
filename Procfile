@@ -1,1 +1,1 @@
-web : node geochart.html
+web : node index.js
