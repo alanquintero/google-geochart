@@ -1,9 +1,28 @@
 {
-  "name": "Google GeoChart",
+  "name": "google-geochart",
   "version": "1.0.0",
-  "private": true,
-  "dependencies": {},
+  "description": "A Google GeoChart Sample",
+  "main": "geochart.html",
   "scripts": {
-    "start": "node app.js"
-  }
+    "start": "node geochart.html"
+  },
+  "dependencies": {
+    "express": "^4.13.3"
+  },
+  "engines": {
+    "node": "4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alan0092/google-geochart"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
+  "author": "Alan Quintero",
+  "contributors": [
+    "Alan Quintero <alan_q_b@hotmail.com> (http://alanquintero.com.mx)"
+  ]
 }
