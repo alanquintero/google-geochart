@@ -27,5 +27,5 @@ Reference: https://developers.google.com/chart/interactive/docs/gallery/geochart
 
 • You can Reset Map colors and Map selections
 
-Working Example: http://geochart.us-west-1.elasticbeanstalk.com/
+Working Example: https://google-geochart.herokuapp.com/
 
