@@ -128,7 +128,7 @@ div {
         mapWindow.document.close();
         mapWindow.focus();
         mapWindow.print();
-        mapWindow.close();
+        mapWindow.onfocus=function(){ mapWindow.close();}
 	}
 	
 	function resetColors() {
