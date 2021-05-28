@@ -128,7 +128,7 @@ div {
         mapWindow.document.close();
         mapWindow.focus();
         mapWindow.print();
-        mapWindow.onfocus=function(){ mapWindow.close();}
+        mapWindow.onfocus = function () { setTimeout(function () { mapWindow.close(); }, 500); }
 	}
 	
 	function resetColors() {
