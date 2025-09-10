@@ -1,207 +1,90 @@
 <!DOCTYPE html>
-<html>
-	<head>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<html lang="en">
+<head>
+    <!-- Basic meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Google GeoChart - US map">
+    <meta name="author" content="Alan Quintero">
+
+    <!-- Title -->
+    <title>Google GeoChart</title>
+
+    <!-- CSS -->
+    <link href="vendor/bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Script -->
+    <script src="vendor/bootstrap-5.3.8-dist/js/bootstrap.min.js"></script>
+    <script src="vendor/gstatic-loader.js"></script>
+    <script src="js/script.js?ver=1.0"></script>
 </head>
 
-<body ng-app>
-	<div align="center">
-		<h1>Google GeoChart</h1>
-	</div>
-	
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-5 col-lg-offset-2 col-sm-6">
-				<div ng-init=" mapOption='region'" >
-					<fieldset class="border p-2">
-						<legend class="w-auto">Map style</legend>
-						<label for="region" class="radio-inline">Region</label> 
-						<input id="region" type="radio" ng-model="mapOption" name="mapSelection"
-							value="region" onclick="redrawRegionsMap('region', false);" /> 
-						<br>
-						<label for="state" class="radio-inline">State</label> 
-						<input id="state" type="radio" ng-model="mapOption" name="mapSelection"
-							value="state" onclick="redrawRegionsMap('state', false);" />
-					</fieldset>
-				</div>
-				<br>
-				<div>
-					<fieldset class="border p-2">
-						<legend class="w-auto">Colors</legend>
-						<label for="background">Background</label> 
-						<input type="color" id="background" value="#81d4fa">
-						<br>
-						<label for="state-region">Region/State</label>
-						<input type="color" id="state-region" value="#FFFFFF"> 
-						<br>
-						<label for="on-click">Highlighted Region/State</label> <input type="color" id="on-click" value="#228B22">
-						<br>
-						<button onclick="redrawRegionsMap('', true);" class="btn btn-success" type="button">Apply Colors</button>
-					</fieldset>
-				</div>
-			</div>
-			<br/>
-			<div class="col-lg-6 col-sm-6">
-				<div>
-					<fieldset>
-						<button type="button" class="btn btn-primary" id="mapButton"
-							onclick="printMap();">Print map</button>
-						<button type="button" class="btn btn-warning" id="mapButton"
-							onclick="resetColors();">Reset colors</button>
-						<button type="button" class="btn btn-danger" id="mapButton"
-							onclick="resetMap();">Reset entire map</button>
-						<div align="center" id="map_div" style="width: 900px; height: 500px;"></div>
-						<iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
-					</fieldset>
-				</div>
-			</div>
-	</div>
-	
-	<footer align="center">
-		Google GeoChart &copy; <br> Created By Alan Quintero
-		<a href="https://www.linkedin.com/in/alan-quintero/">LinkedIn</a>
-	</footer>
+<body>
+<div>
+    <h1 class="display-4 text-center text-primary">Google GeoChart</h1>
+    <p class="lead text-muted text-center">Interactive U.S. map — click, color, and print</p>
+</div>
 
+<div class="container">
+    <div class="row">
+        <div class="col-lg-5 col-lg-offset-2 col-sm-6">
+            <div id="mapContainer">
+                <div class="container border border-primary">
+                    <label class="fs-5 fw-bold">Map style</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="mapSelection" id="flexRadioDefault1"
+                               value="region" onclick="redrawRegionsMap('region', false);" checked />
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Region
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="mapSelection" id="flexRadioDefault2"
+                               value="state" onclick="redrawRegionsMap('state', false);"/>
+                        <label class="form-check-label" for="flexRadioDefault2">
+                            State
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div>
+                <fieldset class="border p-2">
+                    <legend class="w-auto">Colors</legend>
+                    <label for="background">Background</label>
+                    <input type="color" id="background" value="#81d4fa">
+                    <br>
+                    <label for="state-region">Region/State</label>
+                    <input type="color" id="state-region" value="#FFFFFF">
+                    <br>
+                    <label for="on-click">Highlighted Region/State</label>
+                    <input type="color" id="on-click" value="#228B22">
+                    <br>
+                    <button onclick="redrawRegionsMap('', true);" class="btn btn-success" type="button">Apply Colors
+                    </button>
+                </fieldset>
+            </div>
+        </div>
+        <br/>
+        <div class="col-lg-6 col-sm-6">
+            <div>
+                <fieldset>
+                    <button type="button" class="btn btn-primary" onclick="printMap();">Print map
+                    </button>
+                    <button type="button" class="btn btn-warning" onclick="resetColors();">Reset colors
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="resetMap();">Reset entire map
+                    </button>
+                    <div align="center" id="map_div" style="width: 900px; height: 500px;"></div>
+                    <iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>Google GeoChart &copy; <br> Created By Alan Quintero
+    <a href="https://www.linkedin.com/in/alan-quintero/">LinkedIn</a>
+</footer>
 </body>
-
-	<style>
-		div {
-			margin-left: 10px;
-		}
-		#mapButton {
-			display: inline-block;
-		}
-	</style>
-
-	<script type="text/javascript">
-		var globalDataArray;
-
-		google.charts.load('visualization', {
-			'packages' : [ 'geochart' ]
-		});
-		google.charts.setOnLoadCallback(drawRegionsMap);
-
-		function drawRegionsMap() {
-			redrawRegionsMap("region", false);
-		}
-
-		function redrawRegionsMap(option, isUpdate) {
-			var chart = new google.visualization.GeoChart(document
-					.getElementById('map_div'));
-			if (option == '') {
-				option = document
-						.querySelector('input[name="mapSelection"]:checked').value;
-			}
-			if (option == "region") {
-				if (isUpdate == false) {
-					var dataArray = [ [ 'City' ] ];
-				} else {
-					var dataArray = globalDataArray;
-				}
-				var data = google.visualization.arrayToDataTable(dataArray);
-				var options = {
-					displayMode : 'regions',
-					region : 'US',
-					legend : "none",
-					width : 600,
-					height : 500,
-					resolution : 'metros',
-					backgroundColor : document.getElementById("background").value,
-					datalessRegionColor : document.getElementById("state-region").value,
-					defaultColor : document.getElementById("on-click").value
-				};
-
-				google.visualization.events
-						.addListener(chart, "regionClick",
-								function(eventData) {
-									var countryISO2 = eventData["region"];
-									var position = arrayContainsCode(dataArray,
-											countryISO2);
-									if (position == -1) {
-										dataArray.push([ countryISO2 ]);
-									} else {
-										dataArray.splice(position, 1);
-									}
-									data = google.visualization
-											.arrayToDataTable(dataArray);
-									chart.draw(data, options);
-									wait(300);
-								});
-			} else {
-				if (isUpdate == false) {
-					var dataArray = [ [ 'State' ] ];
-				} else {
-					var dataArray = globalDataArray;
-				}
-				var data = google.visualization.arrayToDataTable(dataArray);
-				var options = {
-					resolution : 'provinces',
-					region : 'US',
-					backgroundColor : document.getElementById("background").value,
-					datalessRegionColor : document.getElementById("state-region").value,
-					defaultColor : document.getElementById("on-click").value
-				};
-
-				google.visualization.events
-						.addListener(chart, "regionClick",
-								function(eventData) {
-									var countryISO2 = eventData["region"];
-									var position = arrayContainsCode(dataArray,
-											countryISO2);
-									if (position == -1) {
-										dataArray.push([ countryISO2 ]);
-									} else {
-										dataArray.splice(position, 1);
-									}
-									data = google.visualization
-											.arrayToDataTable(dataArray);
-									chart.draw(data, options);
-									wait(500);
-								});
-			}
-			globalDataArray = dataArray;
-			chart.draw(data, options);
-		}
-
-		function arrayContainsCode(dataArray, code) {
-			var i = dataArray.length;
-			while (i--) {
-				if (dataArray[i] == code) {
-					return i;
-				}
-			}
-			return -1;
-		}
-
-		function wait(ms) {
-			var start = new Date().getTime();
-			var end = start;
-			while (end < start + ms) {
-				end = new Date().getTime();
-			}
-		}
-
-		function printMap() {
-			var mapWindow = window.open('', 'PRINT', 'height=400,width=600');
-			mapWindow.document.write(document.getElementById('map_div').innerHTML);
-			mapWindow.document.close();
-			mapWindow.focus();
-			mapWindow.print();
-			mapWindow.onfocus = function () { setTimeout(function () { mapWindow.close(); }, 500); }
-		}
-		
-		function resetColors() {
-			document.getElementById("background").value = "#81d4fa";
-			document.getElementById("state-region").value = "#FFFFFF";
-			document.getElementById("on-click").value = "#228B22";
-			redrawRegionsMap('', true);
-		}
-		
-		function resetMap() {
-			redrawRegionsMap('', false);
-		}
-
-	</script>
 </html>
