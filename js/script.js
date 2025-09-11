@@ -186,5 +186,3 @@ document.addEventListener('DOMContentLoaded', () => {
     // When the user changes the highlighted region/state color, redraw the map
     highlightColor.addEventListener('input', () => redrawRegionsMap());
 });
-
-
