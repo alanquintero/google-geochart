@@ -1,124 +1,190 @@
-let globalDataArray;
+// Default Map colors
+const DEFAULT_MAP_COLORS = {
+    BACKGROUND: '#E3F2FD',
+    STATE_REGION: '#C8E6C9',
+    HIGHLIGHT: '#F57C00'
+};
 
-google.charts.load('visualization', {
-    'packages' : [ 'geochart' ]
-});
-google.charts.setOnLoadCallback(drawRegionsMap);
+const MapType = {
+    REGION: 'region',
+    STATE: 'state',
 
-function drawRegionsMap() {
-    redrawRegionsMap("region", false);
-}
+};
 
-function redrawRegionsMap(option, isUpdate) {
-    let chart = new google.visualization.GeoChart(document
-        .getElementById('map_div'));
-    if (option === '') {
-        option = document
-            .querySelector('input[name="mapSelection"]:checked').value;
+// Global variable to store highlighted regions/states
+let globalHighlightedAreas = [];
+
+/**
+ * Redraws the US map with highlights.
+ * @param {string|null} selectedMapType - 'region' or 'state'; if null, use selected radio button.
+ * @param {boolean} shouldResetMap - whether to reset all highlights.
+ */
+function redrawRegionsMap(selectedMapType = null, shouldResetMap = false) {
+    const chartContainer = document.getElementById('map_div');
+    const chart = new google.visualization.GeoChart(chartContainer);
+
+    // If no option is provided, get the selected radio button
+    if (!selectedMapType) {
+        selectedMapType = document.querySelector('input[name="mapSelection"]:checked').value;
     }
-    if (option === "region") {
-        if (isUpdate === false) {
-            var dataArray = [ [ 'City' ] ];
+
+    const stateRegionColor = document.getElementById("stateRegionColor").value;
+    const highlightColor = document.getElementById("highlightColor").value;
+    const backgroundColor = document.getElementById("backgroundColor").value;
+
+    // Ensure globalHighlightedAreas is always an array of objects
+    if (!Array.isArray(globalHighlightedAreas)) {
+        globalHighlightedAreas = [];
+    }
+    let highlightedAreas = [...globalHighlightedAreas]; // clone for local manipulation
+
+    // Configure map options
+    let mapOptions = {
+        region: 'US',
+        displayMode: 'regions',
+        legend: 'none',
+        backgroundColor: backgroundColor,
+        datalessRegionColor: stateRegionColor,
+        defaultColor: highlightColor,
+        tooltip: {trigger: 'none'},
+    };
+
+    if (selectedMapType === MapType.REGION) {
+        mapOptions.resolution = 'metros';
+    } else if (selectedMapType === MapType.STATE) {
+        mapOptions.resolution = 'provinces';
+    }
+
+    // Reset highlighted areas if requested
+    if (shouldResetMap) {
+        highlightedAreas = [];
+    }
+
+    // Helper: convert highlightedAreas to DataTable
+    const buildDataTable = () => {
+        const dataArray = [[selectedMapType === MapType.REGION ? 'City' : 'State', 'Color']];
+        highlightedAreas.forEach(a => dataArray.push([a.region, a.color]));
+        return google.visualization.arrayToDataTable(dataArray);
+    };
+
+    // Event listener for clicking on regions/states
+    google.visualization.events.addListener(chart, 'regionClick', function (eventData) {
+        const code = eventData.region;
+        const idx = highlightedAreas.findIndex(a => a.region === code);
+
+        if (idx === -1) {
+            // When a region/state is clicked, add it to highlighted areas
+            highlightedAreas.push({region: code, color: highlightColor});
         } else {
-            var dataArray = globalDataArray;
+            // If already highlighted, remove it to revert color
+            highlightedAreas.splice(idx, 1);
         }
-        var data = google.visualization.arrayToDataTable(dataArray);
-        var options = {
-            displayMode : 'regions',
-            region : 'US',
-            legend : "none",
-            resolution : 'metros',
-            backgroundColor : document.getElementById("background").value,
-            datalessRegionColor : document.getElementById("state-region").value,
-            defaultColor : document.getElementById("on-click").value
-        };
 
-        google.visualization.events
-            .addListener(chart, "regionClick",
-                function(eventData) {
-                    var countryISO2 = eventData["region"];
-                    var position = arrayContainsCode(dataArray,
-                        countryISO2);
-                    if (position == -1) {
-                        dataArray.push([ countryISO2 ]);
-                    } else {
-                        dataArray.splice(position, 1);
-                    }
-                    data = google.visualization
-                        .arrayToDataTable(dataArray);
-                    chart.draw(data, options);
-                    wait(300);
-                });
-    } else {
-        if (isUpdate == false) {
-            var dataArray = [ [ 'State' ] ];
-        } else {
-            var dataArray = globalDataArray;
-        }
-        var data = google.visualization.arrayToDataTable(dataArray);
-        var options = {
-            resolution : 'provinces',
-            region : 'US',
-            backgroundColor : document.getElementById("background").value,
-            datalessRegionColor : document.getElementById("state-region").value,
-            defaultColor : document.getElementById("on-click").value
-        };
+        chart.draw(buildDataTable(), mapOptions);
+    });
 
-        google.visualization.events
-            .addListener(chart, "regionClick",
-                function(eventData) {
-                    var countryISO2 = eventData["region"];
-                    var position = arrayContainsCode(dataArray,
-                        countryISO2);
-                    if (position == -1) {
-                        dataArray.push([ countryISO2 ]);
-                    } else {
-                        dataArray.splice(position, 1);
-                    }
-                    data = google.visualization
-                        .arrayToDataTable(dataArray);
-                    chart.draw(data, options);
-                    wait(500);
-                });
-    }
-    globalDataArray = dataArray;
-    chart.draw(data, options);
+    // Draw the chart initially
+    chart.draw(buildDataTable(), mapOptions);
+
+    // Save back to global state
+    globalHighlightedAreas = highlightedAreas;
 }
 
-function arrayContainsCode(dataArray, code) {
-    let i = dataArray.length;
-    while (i--) {
-        if (dataArray[i] === code) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-function wait(ms) {
-    var start = new Date().getTime();
-    var end = start;
-    while (end < start + ms) {
-        end = new Date().getTime();
-    }
-}
-
+/**
+ * Opens the map in a new window and triggers the print dialog.
+ * After printing or closing the dialog, the temporary window will close automatically.
+ */
 function printMap() {
-    var mapWindow = window.open('', 'PRINT', 'height=400,width=600');
-    mapWindow.document.write(document.getElementById('map_div').innerHTML);
+    // Open a new temporary window
+    const mapWindow = window.open('', 'PRINT', 'height=600,width=800');
+
+    // Write the map's HTML content into the new window
+    mapWindow.document.write(`
+        <html lang="en">
+            <head>
+                <title>Print Map</title>
+            </head>
+            <body>
+                ${document.getElementById('map_div').innerHTML}
+            </body>
+        </html>
+    `);
+
+    // Close the document to finish writing
     mapWindow.document.close();
     mapWindow.focus();
+
+    // Trigger the print dialog
     mapWindow.print();
-    mapWindow.onfocus = function () { setTimeout(function () { mapWindow.close(); }, 500); }
+
+    // Close the window shortly after the print dialog
+    mapWindow.onfocus = function () {
+        setTimeout(() => mapWindow.close(), 500);
+    };
 }
 
+/**
+ * Resets all map colors to their default values.
+ *
+ * Sets the background color, state/region color, and highlight color
+ * back to the values defined in DEFAULT_MAP_COLORS, then redraws the map
+ * to reflect these default colors.
+ */
 function resetColors() {
-    document.getElementById("background").value = "#81d4fa";
-    document.getElementById("state-region").value = "#FFFFFF";
-    document.getElementById("on-click").value = "#228B22";
-    redrawRegionsMap('', true);
+    document.getElementById("backgroundColor").value = DEFAULT_MAP_COLORS.BACKGROUND;
+    document.getElementById("stateRegionColor").value = DEFAULT_MAP_COLORS.STATE_REGION;
+    document.getElementById("highlightColor").value = DEFAULT_MAP_COLORS.HIGHLIGHT;
+    redrawRegionsMap();
 }
 
-function resetMap() {
-    redrawRegionsMap('', false);
+/**
+ * Resets the entire map to its default state.
+ *
+ * This function calls `redrawRegionsMap` with default parameters,
+ * restoring all regions and colors to their initial values.
+ */
+function resetEntireMap() {
+    redrawRegionsMap(null, true);
 }
+
+/**
+ * Initializes the map when the page loads.
+ *
+ * Draws the map in "region" mode and resets it to its default state,
+ * highlighting no areas initially.
+ */
+function initMap() {
+    redrawRegionsMap(MapType.REGION, true);
+}
+
+google.charts.load('visualization', {
+    'packages': ['geochart']
+});
+google.charts.setOnLoadCallback(initMap);
+
+// Assign to color inputs when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('backgroundColor').value = DEFAULT_MAP_COLORS.BACKGROUND;
+    document.getElementById('stateRegionColor').value = DEFAULT_MAP_COLORS.STATE_REGION;
+    document.getElementById('highlightColor').value = DEFAULT_MAP_COLORS.HIGHLIGHT;
+
+    // Draw initial map
+    initMap();
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const backgroundColor = document.getElementById('backgroundColor');
+    const regionStateColor = document.getElementById('stateRegionColor');
+    const highlightColor = document.getElementById('highlightColor');
+
+    // When the user changes the background color, redraw the map
+    backgroundColor.addEventListener('input', () => redrawRegionsMap());
+
+    // When the user changes the region/state color, redraw the map
+    regionStateColor.addEventListener('input', () => redrawRegionsMap());
+
+    // When the user changes the highlighted region/state color, redraw the map
+    highlightColor.addEventListener('input', () => redrawRegionsMap());
+});
+
+
