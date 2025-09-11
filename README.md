@@ -19,4 +19,4 @@ This chart supports two display modes:
 
 ## Live Demo
 
-https://1cd7f832.google-geochart.pages.dev/
+https://google-geochart.pages.dev/
