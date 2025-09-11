@@ -1,31 +1,22 @@
 # Google GeoChart
 
-## What is a GeoChart?
+## Overview
 
-A geochart is a map of a country, a continent, or a region with areas identified in one of three ways:
+Google GeoChart is an interactive map of the United States that allows users to highlight regions or states, customize colors, and print the map. It is built using the Google Charts GeoChart API: https://developers.google.com/chart/interactive/docs/gallery/geochart
 
-• The region mode colors whole regions, such as countries, provinces, or states.
+This chart supports two display modes:
 
-• The markers mode uses circles to designate regions that are scaled according to a value that you specify.
+- Region mode: Colors entire regions of the US.
+- State mode: Colors individual states of the US.
 
-• The text mode labels the regions with identifiers (e.g., "Russia" or "Asia").
+## Features
 
-A geochart is rendered within the browser using SVG or VML. Note that the geochart is not scrollable or draggable, and it's a line drawing rather than a terrain map; if you want any of that, consider a map visualization instead.
+- Switch between Region and State views.
+- Click to highlight or unhighlight regions/states.
+- Customize map colors: background, region/state, and highlight color.
+- Print the map directly from the browser.
+- Reset map colors and selections with a single click.
 
-Reference: https://developers.google.com/chart/interactive/docs/gallery/geochart
+## Live Demo
 
-
-## Functionality
-
-• You can select between Region and State
-
-• You can click to highlight/unhighlighted Regions/States
-
-• You can change the colors of the Map (background, region/state, on-click)
-
-• You can Print the Map
-
-• You can Reset Map colors and Map selections
-
-Working Example: https://1cd7f832.google-geochart.pages.dev/
-
+https://1cd7f832.google-geochart.pages.dev/
