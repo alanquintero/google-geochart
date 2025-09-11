@@ -27,8 +27,6 @@ function redrawRegionsMap(option, isUpdate) {
             displayMode : 'regions',
             region : 'US',
             legend : "none",
-            width : 600,
-            height : 500,
             resolution : 'metros',
             backgroundColor : document.getElementById("background").value,
             datalessRegionColor : document.getElementById("state-region").value,

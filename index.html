@@ -16,6 +16,9 @@
     <!-- CSS -->
     <link href="vendor/bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- Fonts -->
+    <link href="fonts/fontawesome-7.0.1-web/css/all.min.css" rel="stylesheet">
+
     <!-- Script -->
     <script src="vendor/bootstrap-5.3.8-dist/js/bootstrap.min.js"></script>
     <script src="vendor/gstatic-loader.js"></script>
@@ -31,63 +34,83 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-5 col-lg-offset-2 col-sm-6">
-            <div id="mapContainer">
-                <div class="container border border-primary">
-                    <label class="fs-5 fw-bold">Map style</label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mapSelection" id="flexRadioDefault1"
-                               value="region" onclick="redrawRegionsMap('region', false);" checked />
-                        <label class="form-check-label" for="flexRadioDefault1">
-                            Region
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mapSelection" id="flexRadioDefault2"
-                               value="state" onclick="redrawRegionsMap('state', false);"/>
-                        <label class="form-check-label" for="flexRadioDefault2">
-                            State
-                        </label>
+            <div id="mapContainer" class="mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Map Style</h5>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="mapSelection" id="mapRegion"
+                                   value="region" onclick="redrawRegionsMap('region', false);" checked>
+                            <label class="form-check-label" for="mapRegion">
+                                Region
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="mapSelection" id="mapState"
+                                   value="state" onclick="redrawRegionsMap('state', false);">
+                            <label class="form-check-label" for="mapState">
+                                State
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
-            <br>
-            <div>
-                <fieldset class="border p-2">
-                    <legend class="w-auto">Colors</legend>
-                    <label for="background">Background</label>
-                    <input type="color" id="background" value="#81d4fa">
-                    <br>
-                    <label for="state-region">Region/State</label>
-                    <input type="color" id="state-region" value="#FFFFFF">
-                    <br>
-                    <label for="on-click">Highlighted Region/State</label>
-                    <input type="color" id="on-click" value="#228B22">
-                    <br>
-                    <button onclick="redrawRegionsMap('', true);" class="btn btn-success" type="button">Apply Colors
+            <div class="card p-3 mb-3 shadow-sm">
+                <h5 class="card-title">Colors</h5>
+                <form>
+                    <div class="mb-3">
+                        <label for="background" class="form-label">Background (Water)</label>
+                        <input type="color" id="background" value="#E3F2FD" class="form-control form-control-color" title="Choose background color">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="state-region" class="form-label">Region/State</label>
+                        <input type="color" id="state-region" value="#C8E6C9" class="form-control form-control-color" title="Choose region/state color">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="on-click" class="form-label">Highlighted Region/State</label>
+                        <input type="color" id="on-click" value="#F57C00" class="form-control form-control-color" title="Choose highlight color">
+                    </div>
+
+                    <button onclick="redrawRegionsMap('', true);" class="btn btn-success w-100" type="button" style="background-color:#388E3C;">
+                        Apply Colors
                     </button>
-                </fieldset>
+                </form>
             </div>
         </div>
-        <br/>
         <div class="col-lg-6 col-sm-6">
-            <div>
-                <fieldset>
-                    <button type="button" class="btn btn-primary" onclick="printMap();">Print map
+            <div class="mb-3">
+                <div class="btn-group mb-3" role="group" aria-label="Map actions">
+                    <button type="button" class="btn btn-outline-primary" onclick="printMap();">
+                        <i class="fa fa-print"></i> Print Map
                     </button>
-                    <button type="button" class="btn btn-warning" onclick="resetColors();">Reset colors
+                    <button type="button" class="btn btn-outline-secondary" onclick="resetColors();">
+                        <i class="fa fa-palette"></i> Reset Colors
                     </button>
-                    <button type="button" class="btn btn-danger" onclick="resetMap();">Reset entire map
+                    <button type="button" class="btn btn-outline-danger" onclick="resetMap();">
+                        <i class="fa fa-undo"></i> Reset Entire Map
                     </button>
-                    <div align="center" id="map_div" style="width: 900px; height: 500px;"></div>
-                    <iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
-                </fieldset>
+                </div>
+                <div id="map_div" class="border rounded shadow-sm" style="width: 100%; height: 500px;"></div>
+                <iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
             </div>
         </div>
     </div>
 </div>
 
-<footer>Google GeoChart &copy; <br> Created By Alan Quintero
-    <a href="https://www.linkedin.com/in/alan-quintero/">LinkedIn</a>
+<footer class="bg-light text-center text-lg-start border-top mt-4">
+    <div class="container py-3">
+        <p class="mb-1 fw-bold">
+            Google GeoChart &copy;
+        </p>
+        <p class="mb-0">
+            Created by <span class="fw-semibold">Alan Quintero</span> ·
+            <a href="https://www.linkedin.com/in/alan-quintero/" target="_blank" class="text-decoration-none">
+                <i class="bi bi-linkedin"></i> LinkedIn
+            </a>
+        </p>
+    </div>
 </footer>
 </body>
 </html>
