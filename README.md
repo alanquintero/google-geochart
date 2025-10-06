@@ -11,11 +11,21 @@ This chart supports two display modes:
 
 ## Features
 
-- Switch between Region and State views.
-- Click to highlight or unhighlight regions/states.
-- Customize map colors: background, region/state, and highlight color.
-- Print the map directly from the browser.
-- Reset map colors and selections with a single click.
+- **Switch between Region and State views**  
+  ![Switch Views](docs/switch-view.gif)
+
+- **Click to highlight or unhighlight regions/states**  
+  ![Highlight Regions](docs/highlight.gif)
+
+- **Customize map colors**  
+  ![Customize Colors](docs/custom-colors.gif)
+
+- **Print the map**  
+  ![Print Map](docs/print.gif)
+
+- **Reset map colors and selections**  
+  ![Reset Map](docs/reset.gif)
+
 
 ## Live Demo
 
